@@ -1,0 +1,62 @@
+type: object
+required: [project_name, problem_description, end_users]
+properties:
+  project_name:
+    type: string
+    description: "Name of the project"
+  problem_description:
+    type: string
+    description: "Description of the problem being addressed"
+  end_users:
+    type: array
+    items:
+      type: string
+    description: "List of end users for the project"
+  methodology:
+    type: string
+    options:
+      - Agile
+      - Waterfall
+      - Scrum
+      - Kanban
+      - Lean
+    description: "Methodology to be followed in the project"
+  features:
+    type: array
+    items:
+      type: string
+    description: "Key features of the project"
+  user_stories:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Unique identifier for the user story"
+        role:
+          type: string
+          description: "Role of the user in the user story"
+        goal:
+          type: string
+          description: "Goal the user wants to achieve"
+        benefit:
+          type: string
+          description: "Reason for the user's goal"
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: "Priority of the user story"
+      required: [id, role, goal, reason]
+    description: "User stories describing interactions with the system"
+  technologies:
+    type: array
+    items:
+      type: string
+    description: "Technologies to be used in the project"
+  hard_constraints:
+    type: array
+    items:
+      type: string
+    description: "Hard constraints that must be met by the project"
