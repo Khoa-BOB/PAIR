@@ -14,8 +14,6 @@ description: Create structured problem brief from user input for ideation workfl
 # 1. Create output directory
 mkdir -p registry
 
-# 3. Read configs/schemas/brief.yaml 
-
 
 # 2. Generate complete brief of the software
 claude << EOF > registry/brief.yaml
@@ -43,11 +41,6 @@ end_users:
   - "[User type 2]"
 
 methodology: "Scrum"   # Agile | Waterfall | Scrum | Kanban | Lean
-
-features:
-  - "[Feature 1]"
-  - "[Feature 2]"
-  - "[Feature 3]"
 
 user_stories:
   - id: "story.001"

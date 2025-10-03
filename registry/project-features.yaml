@@ -1,0 +1,75 @@
+features:
+  - feature_id: "F001"
+    feature_name: "Topic-Based Conversation Practice"
+    feature_description: "Interactive conversation modules organized by real-world topics (e.g., workplace communication, grocery shopping, medical appointments, social interactions). Each topic includes vocabulary lists, sample dialogues, and practice exercises with speech recognition feedback."
+    score: 4.8
+    status: true
+    adding:
+      round: 1
+      explaination: "This feature directly addresses the highest priority user story (story.001) for practicing English across different everyday topics. It's essential for the core value proposition and aligns with the constraint of topic-based practice as the core feature. The topic-based approach helps immigrants and ESL learners focus on practical, contextual language use that they'll encounter in daily American life."
+    category: "Core Learning"
+    version: "1.0.0"
+
+  - feature_id: "F002"
+    feature_name: "Offline Practice Mode"
+    feature_description: "Download topic modules for offline access, allowing users to practice without internet connectivity. Includes local storage of lessons, exercises, and progress tracking that syncs when connection is restored."
+    score: 4.5
+    status: true
+    adding:
+      round: 1
+      explaination: "This feature is critical for the low-budget constraint and addresses the hard requirement for offline practice capabilities. Many non-native speakers in America may have limited data plans or unreliable internet access. Offline mode reduces infrastructure costs (less server load) while ensuring users can practice consistently regardless of connectivity, which is essential for language learning retention."
+    category: "Accessibility"
+    version: "1.0.0"
+
+  - feature_id: "F003"
+    feature_name: "Progress Tracking Dashboard"
+    feature_description: "Visual dashboard showing user progress across different topics, including completed lessons, practice time, vocabulary mastery, pronunciation improvement scores, and streak tracking. Includes motivational badges and achievement milestones."
+    score: 4.2
+    status: false
+    adding:
+      round: 1
+      explaination: "This feature supports user story story.004 (priority 3) for tracking progress and staying motivated. Language learning requires consistent practice over time, and visual progress tracking with gamification elements helps maintain user engagement without requiring expensive live instruction. The dashboard provides value feedback that keeps learners motivated during the 10-week development timeline and beyond, improving retention and learning outcomes."
+    removing:
+      round: 1
+      explaination: "This feature should be removed from the MVP scope due to the severe 10-week timeline and low-budget constraints. The Progress Tracking Dashboard includes complex, resource-intensive components (pronunciation scoring algorithms, gamification system with badges/achievements, streak tracking, visual analytics) that would consume 20-30% of development time. It supports the lowest-priority user story (story.004, priority 3) and is not mentioned in any hard constraints. The core value proposition—topic-based practice (F001) and offline access (F002)—can be delivered without progress tracking. Users can still learn effectively; they just won't have visual analytics. This feature represents classic 'nice-to-have' scope creep that risks delaying critical functionality. Consider it for post-MVP iteration after validating core learning features with real users."
+    category: "User Engagement"
+    version: "1.0.0"
+
+  - feature_id: "F004"
+    feature_name: "Speech Recognition Practice"
+    feature_description: "Built-in speech recognition that allows users to practice pronunciation and speaking by recording their voice and receiving instant feedback on pronunciation accuracy. Uses device-native speech APIs (iOS Speech Framework, Android SpeechRecognizer) to avoid cloud costs."
+    score: 4.6
+    status: false
+    adding:
+      round: 2
+      explaination: "This feature directly enhances the core topic-based practice (F001) by adding critical speaking/pronunciation practice, which is essential for building real-world conversation confidence (story.001). By leveraging native device APIs instead of cloud services, it aligns perfectly with the low-budget constraint while providing high-value feedback. Speaking practice is fundamental to language learning but was missing from the initial feature set. This complements the existing conversation modules without requiring expensive infrastructure."
+    removing:
+      round: 2
+      explaination: "While conceptually valuable, this feature significantly underestimates technical complexity within the 10-week constraint. Native device APIs (iOS Speech Framework, Android SpeechRecognizer) provide speech-to-text transcription but NOT pronunciation accuracy scoring. Implementing 'instant feedback on pronunciation accuracy' requires building or integrating phonetic analysis algorithms, potentially ML models for accent/pronunciation assessment, and creating reference pronunciation databases—all substantial engineering efforts beyond basic transcription. This represents the same complexity trap as the removed Progress Tracking Dashboard (F003). For a low-budget MVP, attempting pronunciation scoring risks technical debt and timeline overruns. Users can still practice speaking; they simply won't receive automated accuracy feedback in v1. Consider post-MVP after core learning features are proven and stable."
+    category: "Core Learning"
+    version: "1.0.0"
+
+  - feature_id: "F005"
+    feature_name: "American English Accent Focus"
+    feature_description: "Specialized content and pronunciation guides focused on American English accents, idioms, and cultural context. Includes audio samples from different American regions and workplace/social scenarios specific to living in the United States."
+    score: 4.4
+    status: false
+    adding:
+      round: 2
+      explaination: "This feature directly addresses the specific target user context—non-native speakers and immigrants in America (story.003, priority 2). Generic English learning apps exist, but focusing on American English with cultural context provides unique differentiation. This includes American idioms, workplace communication norms, and regional accent exposure that helps immigrants integrate more successfully. The content-focused approach requires minimal technical infrastructure (audio files stored locally for offline use), making it feasible within budget constraints while providing high strategic value."
+    removing:
+      round: 2
+      explaination: "This feature is strategically valuable but operationally unrealistic for a 10-week, low-budget MVP. Creating comprehensive American English accent content requires extensive non-technical resources: professional voice talent for multiple regional accents, experienced content writers for idioms and cultural guides, cultural consultants to ensure accuracy, and audio production/editing. This is a content production project, not software development, and would consume significant budget and timeline that should be focused on core technical features (F001, F002, F006). The base topic-based practice (F001) can include American English examples without regional accent specialization. Regional accent diversity and cultural deep-dives are premium content additions suitable for post-MVP expansion after validating product-market fit with basic functionality."
+    category: "Content"
+    version: "1.0.0"
+
+  - feature_id: "F006"
+    feature_name: "Vocabulary Flashcard System"
+    feature_description: "Simple spaced-repetition flashcard system for vocabulary practice tied to each topic. Users can review key words and phrases from completed lessons with automatic scheduling based on forgetting curves. Fully functional offline with local storage."
+    score: 3.9
+    status: true
+    adding:
+      round: 2
+      explaination: "This feature provides essential vocabulary reinforcement that complements topic-based practice (F001) without the complexity of the removed progress dashboard (F003). Spaced repetition is proven effective for language learning and can be implemented with simple algorithms (no complex analytics). It operates entirely offline, aligns with low-budget constraints, and helps users retain vocabulary from their topic practice sessions. This addresses a gap in the current feature set—learners need vocabulary retention tools to support their conversation practice, and flashcards are a lightweight, proven solution."
+    category: "Core Learning"
+    version: "1.0.0"

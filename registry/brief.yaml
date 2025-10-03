@@ -1,61 +1,46 @@
-project_name: "Scientific Model Repository"
-problem_description: "Scientists need a centralized platform to store, share, and manage their trained machine learning models, similar to how GitHub works for code"
+project_name: "English Learning Platform"
+problem_description: "Non-native English speakers in America struggle to find accessible and effective ways to practice and improve their English language skills across various topics and contexts."
 
 end_users:
-  - "Data Scientists"
-  - "Machine Learning Researchers"
-  - "Academic Researchers"
+  - "Non-native English speakers in America"
+  - "ESL learners"
+  - "Immigrants seeking language proficiency"
 
-methodology: "Scrum"
-
-features:
-  - "Model upload and storage"
-  - "Model download functionality"
-  - "Direct model execution within platform"
-  - "Model versioning and management"
-  - "User authentication and access control"
-  - "Model metadata and documentation"
+methodology: "Agile"
 
 user_stories:
   - id: "story.001"
-    role: "Data Scientist"
-    goal: "Upload and store my trained models securely"
-    benefit: "Centralized storage and backup of valuable research assets"
+    role: "Non-native English speaker"
+    goal: "Practice English conversation across different everyday topics"
+    benefit: "Build confidence and fluency in real-world communication scenarios"
     priority: 1
 
   - id: "story.002"
-    role: "Researcher"
-    goal: "Download models from other scientists"
-    benefit: "Access to pre-trained models for research and comparison"
+    role: "ESL learner"
+    goal: "Access topic-based learning modules on my mobile device"
+    benefit: "Learn English conveniently anytime, anywhere without expensive courses"
     priority: 1
 
   - id: "story.003"
-    role: "Scientist"
-    goal: "Run models directly on the platform"
-    benefit: "Test and validate models without local setup requirements"
-    priority: 1
-
-  - id: "story.004"
-    role: "Machine Learning Engineer"
-    goal: "Version control my model iterations"
-    benefit: "Track model improvements and maintain reproducibility"
+    role: "Immigrant"
+    goal: "Improve English proficiency for workplace and social situations"
+    benefit: "Better integrate into American society and advance career opportunities"
     priority: 2
 
-  - id: "story.005"
-    role: "Research Team Lead"
-    goal: "Manage team access to shared models"
-    benefit: "Collaborative research with controlled access permissions"
+  - id: "story.004"
+    role: "Language learner"
+    goal: "Track my progress across different topic areas"
+    benefit: "Stay motivated and identify areas needing more practice"
     priority: 3
 
 technologies:
-  - "Cloud storage solutions"
-  - "Web-based application framework"
-  - "Container orchestration for model execution"
-  - "Version control system"
-  - "Authentication and authorization system"
+  - "React Native"
+  - "Mobile-first design"
+  - "Cross-platform mobile development"
 
 hard_constraints:
-  - "Budget limitation of $10,000"
-  - "Must support common ML model formats"
-  - "Platform must be accessible via web browser"
-  - "Secure storage and access control required"
+  - "Must be delivered within 10 weeks"
+  - "Must operate on low budget with minimal infrastructure costs"
+  - "Must be mobile app compatible (iOS and Android)"
+  - "Must support offline practice capabilities for users with limited data plans"
+  - "Must focus on topic-based practice as core feature"
