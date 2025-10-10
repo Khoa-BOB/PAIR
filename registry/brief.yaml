@@ -1,46 +1,53 @@
-project_name: "English Learning Platform"
-problem_description: "Non-native English speakers in America struggle to find accessible and effective ways to practice and improve their English language skills across various topics and contexts."
+project_name: "Python Learning Platform"
+problem_description: "Students interested in learning Python need an accessible platform to practice coding through structured problems and exercises."
 
 end_users:
-  - "Non-native English speakers in America"
-  - "ESL learners"
-  - "Immigrants seeking language proficiency"
+  - "Students interested in Python programming"
+  - "Beginner Python learners"
+  - "Self-learners seeking coding practice"
 
 methodology: "Agile"
 
 user_stories:
   - id: "story.001"
-    role: "Non-native English speaker"
-    goal: "Practice English conversation across different everyday topics"
-    benefit: "Build confidence and fluency in real-world communication scenarios"
+    role: "Student learner"
+    goal: "Access personalized practice problems to improve Python skills"
+    benefit: "Build coding proficiency through hands-on exercises tailored to my learning progress"
     priority: 1
 
   - id: "story.002"
-    role: "ESL learner"
-    goal: "Access topic-based learning modules on my mobile device"
-    benefit: "Learn English conveniently anytime, anywhere without expensive courses"
-    priority: 1
-
-  - id: "story.003"
-    role: "Immigrant"
-    goal: "Improve English proficiency for workplace and social situations"
-    benefit: "Better integrate into American society and advance career opportunities"
+    role: "Student learner"
+    goal: "Track my progress and see which topics I've mastered"
+    benefit: "Stay motivated and identify areas that need more practice"
     priority: 2
 
+  - id: "story.003"
+    role: "Student learner"
+    goal: "Get immediate feedback on my code submissions"
+    benefit: "Learn from mistakes quickly and understand correct solutions"
+    priority: 1
+
   - id: "story.004"
-    role: "Language learner"
-    goal: "Track my progress across different topic areas"
-    benefit: "Stay motivated and identify areas needing more practice"
-    priority: 3
+    role: "Student learner"
+    goal: "Practice Python problems organized by difficulty and topic"
+    benefit: "Build skills progressively from basics to advanced concepts"
+    priority: 1
+
+  - id: "story.005"
+    role: "Student learner"
+    goal: "Access the platform from any web browser"
+    benefit: "Learn Python anytime, anywhere without installing software"
+    priority: 2
 
 technologies:
-  - "React Native"
-  - "Mobile-first design"
-  - "Cross-platform mobile development"
+  - "Web-based platform"
+  - "Python runtime environment"
+  - "Browser-based code editor"
+  - "Cloud hosting"
 
 hard_constraints:
   - "Must be delivered within 10 weeks"
-  - "Must operate on low budget with minimal infrastructure costs"
-  - "Must be mobile app compatible (iOS and Android)"
-  - "Must support offline practice capabilities for users with limited data plans"
-  - "Must focus on topic-based practice as core feature"
+  - "Limited budget requiring cost-effective technology choices"
+  - "Each user must have personalized practice problems"
+  - "Must be accessible via web browser without installation"
+  - "Must support safe execution of user-submitted Python code"
