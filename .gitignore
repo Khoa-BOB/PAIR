@@ -1,19 +1,18 @@
+# Ignore registry folder
+/registry/
 
-  # Ignore registry folder
-  /registry/
+# macOS
+.DS_Store
 
-  # macOS
-  .DS_Store
+# Python
+__pycache__/
+*.py[cod]
+venv/
+env/
 
-  # Python
-  __pycache__/
-  *.py[cod]
-  venv/
-  env/
+# IDE
+.vscode/
+.idea/
 
-  # IDE
-  .vscode/
-  .idea/
-
-  # Logs
-  *.log
+# Logs
+*.log
