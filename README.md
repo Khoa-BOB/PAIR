@@ -28,18 +28,34 @@ Through iterative cycles of addition and removal, the framework helps you:
 
 ## Architecture
 
+### Two-Agent System with Task Tool Invocation
+
+The framework uses Claude Code's Task tool to invoke specialized agents, maintaining clear separation between command orchestration and agent reasoning:
+
+**Command Layer** (`.claude/commands/`):
+- Handles file I/O, context gathering, and result processing
+- Invokes agents via Task tool with `subagent_type` parameter
+- Manages round numbering and workflow orchestration
+
+**Agent Layer** (`.claude/agents/`):
+- **feature-architect**: Analyzes requirements and generates features (returns YAML)
+- **feature-remover**: Evaluates features for removal (returns JSON)
+- Agents do the thinking; commands do the I/O
+
+### Directory Structure
+
 ```
 .
 ├── .claude/
 │   ├── agents/
-│   │   ├── adder/              # Feature-architect agent
-│   │   └── remover/            # Feature-remover agent
-│   └── commands/               # Slash commands for workflows
+│   │   ├── adder/              # Feature-architect agent definition
+│   │   └── remover/            # Feature-remover agent definition
+│   └── commands/               # Slash commands (describe_goal, add_features, remove_features, iterate)
 ├── config/
 │   └── schemas/
 │       ├── brief.yaml          # Project brief schema
 │       └── feature.yaml        # Feature schema
-└── registry/                   # Generated output (created during execution)
+└── registry/                   # Generated output (gitignored, created during execution)
     ├── brief.yaml              # Project description and requirements
     └── project-features.yaml   # All features with add/remove history
 ```
@@ -116,15 +132,48 @@ Removed features:
 - Retain all metadata for historical tracking
 - Include round removed and justification
 
-#### 4. Iterate
+#### 4. Iterate (Recommended)
 
-Alternate between `/add_features` and `/remove_features` to refine your feature set through multiple rounds:
+**Option A: Automated Iteration**
+
+Run multiple rounds automatically:
+
+```bash
+/iterate 3
+```
+
+This command will:
+- Execute 3 rounds of add (3 features) + remove (up to 2 features)
+- Display progress after each round
+- Generate final statistics (total, active, removed, retention rate)
+
+**Parameters**:
+- `number_of_rounds` (optional): Number of cycles to run (default: 3, max: 10)
+- Round numbers represent **iteration cycles** (1, 2, 3...), not cumulative counters
+
+**Option B: Manual Iteration**
+
+Alternate between `/add_features` and `/remove_features` for more control:
 
 ```bash
 /add_features      # Round 2: Add 3 more features
 /remove_features   # Round 2: Remove up to 2 features
 /add_features      # Round 3: Add 3 more features
 /remove_features   # Round 3: Remove up to 2 features
+```
+
+You can also specify round numbers explicitly:
+
+```bash
+/add_features 5      # Adds features with adding.round: 5
+/remove_features 5   # Removes features with removing.round: 5
+```
+
+Or let the commands auto-calculate the next round based on existing features:
+
+```bash
+/add_features        # Calculates max_adding_round + 1
+/remove_features     # Calculates max_removing_round + 1
 ```
 
 ## Data Schemas
@@ -164,10 +213,11 @@ features:
   - feature_id: "F001"
     feature_name: "User Authentication"
     feature_description: "Secure login system with OAuth support"
-    score: 4.5  # 0-5, importance rating
+    score: 4.5  # 0-5 float, importance rating
     status: true  # true = active, false = removed
-    round_added: 1
-    added_explanation: "Core security requirement for user data protection"
+    adding:
+      round: 1
+      explaination: "Core security requirement for user data protection aligning with story.001 for secure user access"
     category: "Security"  # Optional
     version: "1.0.0"      # Optional, semantic versioning
     owner: "Backend Team"  # Optional
@@ -177,76 +227,184 @@ features:
     feature_description: "Toggle between light and dark themes"
     score: 2.0
     status: false  # Removed
-    round_added: 1
-    added_explanation: "Enhance user experience with theme options"
-    round_removed: 2
-    removed_explanation: "Low priority compared to core features; can be added post-MVP"
+    adding:
+      round: 1
+      explaination: "Enhance user experience with theme options for better accessibility"
+    removing:
+      round: 2
+      explaination: "Low priority compared to core features; represents scope creep given budget and timeline constraints. Can be added post-MVP after core functionality is proven."
 ```
 
 ## Agent Behaviors
 
 ### Adder Agent (feature-architect)
 
+**Located**: `.claude/agents/adder/feature-architect.md`
+**Model**: sonnet
+**Invoked via**: Task tool with `subagent_type: "feature-architect"`
+
 **Philosophy**: Propose innovative features that create user value while remaining technically feasible.
 
 **Approach**:
-- Analyzes end user needs and pain points from the brief
+- Systematic requirements analysis from project brief
+- Analyzes end user needs and pain points
 - Considers competitive differentiation and business value
 - Proposes features in three tiers:
   - **Core essentials**: Must-have functionality for MVP
   - **Competitive differentiators**: Features that set the product apart
   - **Future innovations**: Forward-looking capabilities
+- Balances user experience, technical feasibility, and business value
 - Balances ambition with practical constraints
 
-**Output**: 3 features per round with concrete justifications
+**Output**: Exactly 3 features per invocation in YAML format, directly appendable to project-features.yaml
 
 ### Remover Agent (feature-remover)
 
-**Philosophy**: Apply critical evaluation to maintain focus on high-value features.
+**Located**: `.claude/agents/remover/feature-remover.md`
+**Model**: sonnet
+**Invoked via**: Task tool with `subagent_type: "feature-remover"`
+
+**Philosophy**: Apply critical evaluation to maintain focus on high-value features using the 80/20 rule.
 
 **Approach**:
-- Evaluates features against the 80/20 rule (Pareto principle)
+- Critical value assessment of all active features (status: true)
+- Evaluates: alignment with requirements, redundancy, resource impact, technical debt, strategic fit
 - Considers resource impact and technical debt
 - Assesses strategic alignment with project goals
-- Identifies scope creep and redundancy
+- Identifies scope creep and feature bloat
 - Provides clear removal justifications with risk assessment
 
-**Output**: At most 2 removals per round with detailed explanations
+**Output**: JSON format with 0-2 removal recommendations per invocation:
+```json
+{
+  "removals": [
+    {
+      "feature_id": "F###",
+      "explanation": "Detailed removal justification..."
+    }
+  ]
+}
+```
 
 ## Key Principles
 
-1. **Iterative Refinement**: Cycles of addition and removal rather than one-time feature definition
-2. **Justified Changes**: Every feature addition/removal must include concrete reasoning
-3. **Status Tracking**: Features are never deleted; their status is updated when removed
-4. **Round Tracking**: Each operation records the iteration round for historical context
-5. **Schema Compliance**: All outputs conform to validated YAML schemas
-6. **Balanced Perspectives**: Opposing agents create tension that drives better decisions
+1. **Iterative Refinement**: Cycles of addition and removal rather than one-time feature definition. Each iteration adds 3 features and removes up to 2, creating a dialectical process that refines scope.
+2. **Iteration-Based Round Numbering**: Round numbers represent **iteration cycles**, not global counters. Each `/iterate` run uses rounds 1, 2, 3... regardless of previous iterations. Manual commands auto-calculate next sequential round.
+3. **Agent Invocation Architecture**: Commands invoke agents via Task tool, maintaining separation. Commands handle file I/O and orchestration; agents handle analysis and decision-making.
+4. **Justified Changes**: Every feature addition/removal includes concrete reasoning (3-5 sentences) that references specific user stories, constraints, and strategic value.
+5. **Status Tracking**: Features are never deleted; status is updated to false when removed. This maintains complete historical record with both adding and removing explanations.
+6. **Schema Compliance**: All outputs conform to validated YAML schemas. Agents are provided with schema specifications to ensure compliance.
+7. **Balanced Perspectives**: Opposing agents create tension that drives better decisions
 
 ## Example Workflow
+
+### Quick Start (Recommended)
 
 ```bash
 # Initialize project
 /describe_goal
-# Answer: Building a task management app for remote teams...
+# Answer 5 questions about your project...
+
+# Run automated iteration
+/iterate 3
+# Executes 3 rounds of add/remove cycles
+# Final result: ~5 active features after refinement
+```
+
+### Manual Workflow
+
+```bash
+# Initialize project
+/describe_goal
+# Answer: Building a Python learning platform...
 
 # Round 1
 /add_features
-# Output: 3 features added (F001-F003)
+# Output: 3 features added (F001-F003) - Core essentials
 
 /remove_features
-# Output: 1 feature removed (F002 marked as status: false)
+# Output: 0 features removed (all are essential)
 
 # Round 2
 /add_features
-# Output: 3 more features added (F004-F006)
+# Output: 3 more features added (F004-F006) - Enhancements
 
 /remove_features
-# Output: 2 features removed (F001, F005 marked as status: false)
+# Output: 2 features removed (F005, F006 marked as status: false)
+
+# Round 3
+/add_features
+# Output: 3 more features added (F007-F009) - Advanced features
+
+/remove_features
+# Output: 2 features removed (F008, F009 marked as status: false)
 
 # Review results
 cat registry/project-features.yaml
-# See all features with complete add/remove history
+# See all 9 features with complete add/remove history
+# Active: F001, F002, F003, F004, F007 (5 features)
+# Removed: F005, F006, F008, F009 (4 features)
 ```
+
+## Common Commands
+
+### Starting a New Project
+```bash
+# 1. Create project brief
+/describe_goal
+# Answer 5 questions about your project
+
+# 2. Run automated iteration (recommended)
+/iterate 3
+# Executes 3 rounds of add (3 features) + remove (up to 2 features)
+
+# OR: Manual iteration
+/add_features      # Round 1: Add 3 features
+/remove_features   # Round 1: Remove up to 2 features
+/add_features      # Round 2: Add 3 features
+/remove_features   # Round 2: Remove up to 2 features
+```
+
+### Continuing an Existing Project
+```bash
+# Run additional iterations
+/iterate 2
+# Rounds 1-2 (iteration-based, not continuation of previous rounds)
+
+# Add features manually with specific round
+/add_features 5
+# Adds 3 features with adding.round: 5
+
+# Add features with auto-calculated round
+/add_features
+# Calculates next round from existing features
+```
+
+### Working with the Registry
+```bash
+# View project brief
+cat registry/brief.yaml
+
+# View all features with history
+cat registry/project-features.yaml
+
+# Count active features
+grep "status: true" registry/project-features.yaml | wc -l
+
+# Count removed features
+grep "status: false" registry/project-features.yaml | wc -l
+```
+
+## Important Notes
+
+- **Always run `/describe_goal` first** to create the project brief before generating features
+- **Round numbers are iteration-based**, not cumulative across multiple `/iterate` runs
+- **Agents return different formats**: feature-architect returns YAML, feature-remover returns JSON
+- **Status field is boolean**: `true` = active, `false` = removed (not strings)
+- **Feature IDs must be unique** and follow pattern `F###` or `F####` (e.g., F001, F1234)
+- **Scores are floats 0-5**, representing feature importance/priority
+- **User story priorities are 1-5**, where 1 is highest priority (most important)
+- **Registry folder is gitignored** by default - outputs are generated artifacts, not source code
 
 ## Use Cases
 
